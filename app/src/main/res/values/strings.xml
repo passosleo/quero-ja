@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">QueroJa</string>
+    <string name="app_logo">QueroJa</string>
+    <string name="login_title">QueroJá</string>
+    <string name="login_username_hint">Seu e-mail</string>
+    <string name="login_password_hint">Sua senha</string>
+    <string name="login_button">Entrar</string>
+    <string name="login_no_account">Não tenho conta</string>
+    <string name="signup_name_hint">Seu nome</string>
+    <string name="signup_username_hint">Seu melhor e-mail</string>
+    <string name="signup_password_hint">Crie uma senha</string>
+    <string name="signup_confirm_password_hint">Confirme a senha</string>
+    <string name="signup_button">Cadastrar</string>
+    <string name="signup_go_back">Voltar</string>
+    <string name="signup_success">Cadastro realizado com sucesso!</string>
+    <string name="signup_error">Erro ao cadastrar. Tente novamente mais tarde.</string>
+    <string name="list_wishes_title">Lista de Desejos</string>
+    <string name="list_wishes_add_wish">Adicionar</string>
+</resources>
