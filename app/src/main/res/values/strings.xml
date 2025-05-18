@@ -16,4 +16,5 @@
     <string name="signup_error">Erro ao cadastrar. Tente novamente mais tarde.</string>
     <string name="list_wishes_title">Lista de Desejos</string>
     <string name="list_wishes_add_wish">Adicionar</string>
+    <string name="list_wishes_empty">Nenhum desejo encontrado.</string>
 </resources>
