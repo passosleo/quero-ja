@@ -17,4 +17,5 @@
     <string name="list_wishes_title">Lista de Desejos</string>
     <string name="list_wishes_add_wish">Adicionar</string>
     <string name="list_wishes_empty">Nenhum desejo encontrado.</string>
+    <string name="list_wishes_error">Erro ao carregar a lista de desejos.</string>
 </resources>
