@@ -173,7 +173,7 @@
                 android:textColor="@color/primary"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:onClick="navigateToLogin"
+                android:onClick="navigateToSignIn"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/login_button" />

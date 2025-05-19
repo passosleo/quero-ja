@@ -2,9 +2,9 @@ package com.leonardo.queroja;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,9 +16,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.leonardo.queroja.entities.UserEntity;
 import com.leonardo.queroja.repositories.UserRepository;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -46,8 +44,8 @@ public class SignUpActivity extends AppCompatActivity {
         confirmPasswordField = findViewById(R.id.confirm_password_layout);
     }
 
-    public void navigateToLogin(View v) {
-        Intent intent = new Intent(this, MainActivity.class);
+    public void navigateToSignIn(View v) {
+        Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
     }
 
@@ -133,5 +131,8 @@ public class SignUpActivity extends AppCompatActivity {
         newUser.setPassword(password);
 
         userRepository.save(newUser);
+
+        Toast.makeText(this, "Usuário cadastrado com sucesso", Toast.LENGTH_SHORT).show();
+        navigateToSignIn(v);
     }
 }
