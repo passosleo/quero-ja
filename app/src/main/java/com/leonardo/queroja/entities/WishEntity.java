@@ -26,6 +26,11 @@ public class WishEntity {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public WishEntity() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public Integer getWishId() {
         return wishId;
     }

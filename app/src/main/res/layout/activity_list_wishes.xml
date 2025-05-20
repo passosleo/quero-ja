@@ -38,6 +38,7 @@
       android:layout_height="wrap_content"
       android:contentDescription="@string/list_wishes_add_wish"
       android:src="@drawable/ic_add"
+      android:onClick="navigateToWishForm"
       app:backgroundTint="@color/primary"
       app:tint="@color/white"
       app:layout_constraintBottom_toBottomOf="parent"

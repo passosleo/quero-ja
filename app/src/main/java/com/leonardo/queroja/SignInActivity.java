@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.leonardo.queroja.entities.UserEntity;
+import com.leonardo.queroja.global.UserSession;
 import com.leonardo.queroja.repositories.UserRepository;
 
 import java.util.HashMap;
@@ -95,6 +96,8 @@ public class SignInActivity extends AppCompatActivity {
             passwordField.setError("Senha incorreta");
             return;
         }
+
+        UserSession.getInstance(this).setUser(userExists);
 
         navigateToListWishes(v);
     }

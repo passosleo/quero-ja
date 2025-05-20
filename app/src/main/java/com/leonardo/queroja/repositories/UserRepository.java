@@ -31,6 +31,8 @@ public class UserRepository {
         dbHelper.close();
     }
 
+    private static final String tableName = "users";
+
     private static final String[] tableColumns = {
             "user_id",
             "name",
@@ -40,18 +42,20 @@ public class UserRepository {
             "updated_at"
     };
 
-    public long save(UserEntity user) {
+    public UserEntity save(UserEntity user) {
         ContentValues values = new ContentValues();
         values.put(tableColumns[1], user.getName());
         values.put(tableColumns[2], user.getEmail());
         values.put(tableColumns[3], user.getPassword());
         values.put(tableColumns[4], user.getCreatedAt().toString());
         values.put(tableColumns[5], user.getUpdatedAt().toString());
-        return database.insert("users", null, values);
+        long id = database.insert(tableName, null, values);
+        user.setUserId((int) id);
+        return user;
     }
 
     public List<UserEntity> findAll() {
-        Cursor cursor = database.query("users",
+        Cursor cursor = database.query(tableName,
                 tableColumns, null, null, null, null, null);
 
         List<UserEntity> users = new ArrayList<>();
@@ -75,8 +79,8 @@ public class UserRepository {
     }
 
     public UserEntity findByEmail(String email) {
-        Cursor cursor = database.query("users",
-                tableColumns, "email = ?", new String[]{email}, null, null, null);
+        Cursor cursor = database.query(tableName,
+                tableColumns, String.format("%s = ?", tableColumns[2]), new String[]{email}, null, null, null);
 
         UserEntity user = null;
 

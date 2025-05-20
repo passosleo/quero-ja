@@ -18,4 +18,12 @@
     <string name="list_wishes_add_wish">Adicionar</string>
     <string name="list_wishes_empty">Nenhum desejo encontrado.</string>
     <string name="list_wishes_error">Erro ao carregar a lista de desejos.</string>
+    <string name="form_title">Novo Desejo</string>
+    <string name="form_title_hint">Título</string>
+    <string name="form_description_hint">Descrição</string>
+    <string name="form_link_hint">Link</string>
+    <string name="form_priority_label">Prioridade</string>
+    <string name="form_save_button">Salvar</string>
+    <string name="form_go_back">Voltar</string>
+
 </resources>

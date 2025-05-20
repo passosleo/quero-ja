@@ -2,6 +2,7 @@ package com.leonardo.queroja;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -87,7 +88,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         if (email.isEmpty()) {
             errors.put(emailField, "O e-mail é obrigatório");
-        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             errors.put(emailField, "E-mail inválido");
         }
 
