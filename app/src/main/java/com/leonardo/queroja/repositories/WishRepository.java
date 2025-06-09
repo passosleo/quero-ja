@@ -84,4 +84,39 @@ public class WishRepository {
 
         return wishes;
     }
+
+    public List<WishEntity> findByUserId(int userId) {
+        String selection = String.format("%s = ?", tableColumns[1]);
+        String[] selectionArgs = { String.valueOf(userId) };
+
+        Cursor cursor = database.query(tableName,
+                tableColumns, selection, selectionArgs, null, null, null);
+
+        List<WishEntity> wishes = new ArrayList<>();
+
+        if (cursor.moveToFirst()) {
+            do {
+                WishEntity wish = new WishEntity();
+                wish.setWishId(cursor.getInt(cursor.getColumnIndexOrThrow(tableColumns[0])));
+                wish.setUserId(cursor.getInt(cursor.getColumnIndexOrThrow(tableColumns[1])));
+                wish.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[2])));
+                wish.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[3])));
+                wish.setLink(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[4])));
+                wish.setPriority(Priority.fromCode(cursor.getInt(cursor.getColumnIndexOrThrow(tableColumns[5]))));
+                wish.setCreatedAt(LocalDateTime.parse(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[6]))));
+                wish.setUpdatedAt(LocalDateTime.parse(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[7]))));
+                wishes.add(wish);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        return wishes;
+    }
+
+    public void delete(WishEntity wish) {
+        String whereClause = String.format("%s = ?", tableColumns[0]);
+        String[] whereArgs = { String.valueOf(wish.getWishId()) };
+        database.delete(tableName, whereClause, whereArgs);
+    }
 }
