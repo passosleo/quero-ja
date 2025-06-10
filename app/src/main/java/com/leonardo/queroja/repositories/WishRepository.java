@@ -13,6 +13,7 @@ import com.leonardo.queroja.enums.Priority;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class WishRepository {
 
@@ -45,20 +46,6 @@ public class WishRepository {
             "updated_at"
     };
 
-    public WishEntity save(WishEntity user) {
-        ContentValues values = new ContentValues();
-        values.put(tableColumns[1], user.getUserId());
-        values.put(tableColumns[2], user.getTitle());
-        values.put(tableColumns[3], user.getDescription());
-        values.put(tableColumns[4], user.getLink());
-        values.put(tableColumns[5], user.getPriority().getCode());
-        values.put(tableColumns[6], user.getCreatedAt().toString());
-        values.put(tableColumns[7], user.getUpdatedAt().toString());
-        long id = database.insert(tableName, null, values);
-        user.setWishId((int) id);
-        return user;
-    }
-
     public List<WishEntity> findAll() {
         Cursor cursor = database.query(tableName,
                 tableColumns, null, null, null, null, null);
@@ -83,6 +70,31 @@ public class WishRepository {
         cursor.close();
 
         return wishes;
+    }
+
+    public Optional<WishEntity> findById(int wishId) {
+        String selection = String.format("%s = ?", tableColumns[0]);
+        String[] selectionArgs = { String.valueOf(wishId) };
+
+        Cursor cursor = database.query(tableName,
+                tableColumns, selection, selectionArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            WishEntity wish = new WishEntity();
+            wish.setWishId(cursor.getInt(cursor.getColumnIndexOrThrow(tableColumns[0])));
+            wish.setUserId(cursor.getInt(cursor.getColumnIndexOrThrow(tableColumns[1])));
+            wish.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[2])));
+            wish.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[3])));
+            wish.setLink(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[4])));
+            wish.setPriority(Priority.fromCode(cursor.getInt(cursor.getColumnIndexOrThrow(tableColumns[5]))));
+            wish.setCreatedAt(LocalDateTime.parse(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[6]))));
+            wish.setUpdatedAt(LocalDateTime.parse(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[7]))));
+            cursor.close();
+            return Optional.of(wish);
+        }
+
+        cursor.close();
+        return Optional.empty();
     }
 
     public List<WishEntity> findByUserId(int userId) {
@@ -112,6 +124,37 @@ public class WishRepository {
         cursor.close();
 
         return wishes;
+    }
+
+    public WishEntity create(WishEntity wish) {
+        ContentValues values = new ContentValues();
+        values.put(tableColumns[1], wish.getUserId());
+        values.put(tableColumns[2], wish.getTitle());
+        values.put(tableColumns[3], wish.getDescription());
+        values.put(tableColumns[4], wish.getLink());
+        values.put(tableColumns[5], wish.getPriority().getCode());
+        values.put(tableColumns[6], wish.getCreatedAt().toString());
+        values.put(tableColumns[7], LocalDateTime.now().toString());
+        long id = database.insert(tableName, null, values);
+        wish.setWishId((int) id);
+        return wish;
+    }
+
+    public WishEntity update(WishEntity wish) {
+        ContentValues values = new ContentValues();
+        values.put(tableColumns[1], wish.getUserId());
+        values.put(tableColumns[2], wish.getTitle());
+        values.put(tableColumns[3], wish.getDescription());
+        values.put(tableColumns[4], wish.getLink());
+        values.put(tableColumns[5], wish.getPriority().getCode());
+        values.put(tableColumns[6], wish.getCreatedAt().toString());
+        values.put(tableColumns[7], LocalDateTime.now().toString());
+
+        String whereClause = String.format("%s = ?", tableColumns[0]);
+        String[] whereArgs = { String.valueOf(wish.getWishId()) };
+
+        database.update(tableName, values, whereClause, whereArgs);
+        return wish;
     }
 
     public void delete(WishEntity wish) {

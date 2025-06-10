@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -32,6 +33,11 @@ public class FormWishActivity extends AppCompatActivity {
     private Spinner prioritySpinner;
     private WishRepository wishRepository;
 
+    private TextView formTitle;
+
+    private Integer wishId = null;
+    private WishEntity wishToEdit = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +55,7 @@ public class FormWishActivity extends AppCompatActivity {
         descriptionField = findViewById(R.id.description_layout);
         linkField = findViewById(R.id.link_layout);
         prioritySpinner = findViewById(R.id.priority_spinner);
+        formTitle = findViewById(R.id.form_title);
 
         ArrayAdapter<Priority> adapter = new ArrayAdapter<>(
                 this,
@@ -57,6 +64,35 @@ public class FormWishActivity extends AppCompatActivity {
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         prioritySpinner.setAdapter(adapter);
+
+        wishId = getIntent().hasExtra("wish_id") ? getIntent().getIntExtra("wish_id", -1) : null;
+
+        if (wishId != null && wishId != -1) {
+            wishToEdit = wishRepository.findById(wishId).orElse(null);
+            if (wishToEdit != null) {
+                formTitle.setText("Editar Desejo");
+                populateFields(wishToEdit);
+            } else {
+                Toast.makeText(this, "Erro ao carregar o desejo para edição", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        } else {
+            formTitle.setText("Novo Desejo");
+        }
+    }
+
+    private void populateFields(WishEntity wish) {
+        Optional.ofNullable(titleField.getEditText()).ifPresent(e -> e.setText(wish.getTitle()));
+        Optional.ofNullable(descriptionField.getEditText()).ifPresent(e -> e.setText(wish.getDescription()));
+        Optional.ofNullable(linkField.getEditText()).ifPresent(e -> e.setText(wish.getLink()));
+
+        Priority[] priorities = Priority.values();
+        for (int i = 0; i < priorities.length; i++) {
+            if (priorities[i] == wish.getPriority()) {
+                prioritySpinner.setSelection(i);
+                break;
+            }
+        }
     }
 
     public void navigateToListWishes(View v) {
@@ -90,7 +126,7 @@ public class FormWishActivity extends AppCompatActivity {
             errors.put(titleField, "Título é obrigatório");
         }
 
-        if (link.isEmpty()){
+        if (link.isEmpty()) {
             errors.put(linkField, "Link é obrigatório");
         } else if (!Patterns.WEB_URL.matcher(link).matches()) {
             errors.put(linkField, "Link inválido");
@@ -102,19 +138,30 @@ public class FormWishActivity extends AppCompatActivity {
             }
             return;
         }
+
         UserEntity loggedUser = UserSession.getInstance(this).getUser();
+        Priority selectedPriority = (Priority) prioritySpinner.getSelectedItem();
 
+        if (wishToEdit != null) {
+            wishToEdit.setTitle(title);
+            wishToEdit.setDescription(description);
+            wishToEdit.setLink(link);
+            wishToEdit.setPriority(selectedPriority);
 
-        WishEntity newWish = new WishEntity();
-        newWish.setUserId(loggedUser.getUserId());
-        newWish.setTitle(title);
-        newWish.setDescription(description);
-        newWish.setLink(link);
-        newWish.setPriority((Priority) prioritySpinner.getSelectedItem());
+            wishRepository.update(wishToEdit);
+            Toast.makeText(this, "Desejo atualizado com sucesso", Toast.LENGTH_SHORT).show();
+        } else {
+            WishEntity newWish = new WishEntity();
+            newWish.setUserId(loggedUser.getUserId());
+            newWish.setTitle(title);
+            newWish.setDescription(description);
+            newWish.setLink(link);
+            newWish.setPriority(selectedPriority);
 
-        wishRepository.save(newWish);
+            wishRepository.create(newWish);
+            Toast.makeText(this, "Desejo cadastrado com sucesso", Toast.LENGTH_SHORT).show();
+        }
 
-        Toast.makeText(this, "Desejo cadastrado com sucesso", Toast.LENGTH_SHORT).show();
         navigateToListWishes(v);
     }
 }

@@ -49,8 +49,8 @@ public class WishAdapter extends RecyclerView.Adapter<WishAdapter.WishViewHolder
         holder.priorityTextView.setText(wish.getPriority().getDescription());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        holder.createdAtTextView.setText(String.format("Criado em: %s", wish.getCreatedAt().format(formatter)));
-        holder.updatedAtTextView.setText(String.format("Atualizado em: %s", wish.getUpdatedAt().format(formatter)));
+        holder.createdAtTextView.setText(String.format("Criado em: %s", wish.getCreatedAt().minusHours(3).format(formatter)));
+        holder.updatedAtTextView.setText(String.format("Atualizado em: %s", wish.getUpdatedAt().minusHours(3).format(formatter)));
 
         switch (wish.getPriority()) {
             case LOW:

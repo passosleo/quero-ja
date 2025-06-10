@@ -75,10 +75,9 @@ public class ListWishesActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(WishEntity wish) {
-                // Exemplo se quiser abrir os detalhes no futuro
-                // Intent intent = new Intent(ListWishesActivity.this, DetailWishActivity.class);
-                // intent.putExtra("wish_id", wish.getWishId());
-                // startActivity(intent);
+                Intent intent = new Intent(ListWishesActivity.this, FormWishActivity.class);
+                intent.putExtra("wish_id", wish.getWishId());
+                startActivity(intent);
             }
         });
 
