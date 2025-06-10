@@ -76,7 +76,7 @@ public class WishAdapter extends RecyclerView.Adapter<WishAdapter.WishViewHolder
         });
 
         holder.itemView.setOnClickListener(v -> {
-            if (listener != null) listener.onLinkClick(wish.getLink());
+            if (listener != null) listener.onItemClick(wish);
         });
     }
 
