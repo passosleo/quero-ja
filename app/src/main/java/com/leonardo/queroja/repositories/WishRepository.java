@@ -49,8 +49,15 @@ public class WishRepository {
     };
 
     public List<WishEntity> findAll() {
-        Cursor cursor = database.query(tableName,
-                tableColumns, null, null, null, null, null);
+        Cursor cursor = database.query(
+                tableName,
+                tableColumns,
+                null,
+                null,
+                null,
+                null,
+                String.format("%s DESC", tableColumns[7])
+        );
 
         List<WishEntity> wishes = new ArrayList<>();
 
@@ -105,8 +112,15 @@ public class WishRepository {
         String selection = String.format("%s = ?", tableColumns[1]);
         String[] selectionArgs = { String.valueOf(userId) };
 
-        Cursor cursor = database.query(tableName,
-                tableColumns, selection, selectionArgs, null, null, null);
+        Cursor cursor = database.query(
+                tableName,
+                tableColumns,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                String.format("%s DESC", tableColumns[7])
+        );
 
         List<WishEntity> wishes = new ArrayList<>();
 
@@ -135,8 +149,15 @@ public class WishRepository {
         String selection = String.format("%s = ? AND %s = ?", tableColumns[1], tableColumns[8]);
         String[] selectionArgs = { String.valueOf(userId), String.valueOf(status.getCode()) };
 
-        Cursor cursor = database.query(tableName,
-                tableColumns, selection, selectionArgs, null, null, null);
+        Cursor cursor = database.query(
+                tableName,
+                tableColumns,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                String.format("%s DESC", tableColumns[7])
+        );
 
         List<WishEntity> wishes = new ArrayList<>();
 

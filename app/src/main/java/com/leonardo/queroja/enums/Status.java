@@ -1,7 +1,7 @@
 package com.leonardo.queroja.enums;
 
 public enum Status {
-    NOT_OWNED(0, "Quero já"),
+    NOT_OWNED(0, "Meus desejos"),
     OWNED(1, "Já tenho");
     private final Integer code;
     private final String description;

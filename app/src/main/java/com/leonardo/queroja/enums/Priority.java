@@ -1,9 +1,9 @@
 package com.leonardo.queroja.enums;
 
 public enum Priority {
-    LOW(0, "Baixa"),
-    MEDIUM(1, "Média"),
-    HIGH(2, "Alta");
+    LOW(0, "Seria legal"),
+    MEDIUM(1, "Gostaria de ter"),
+    HIGH(2, "Quero já");
     private final Integer code;
     private final String description;
 

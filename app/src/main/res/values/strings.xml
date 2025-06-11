@@ -22,9 +22,10 @@
     <string name="form_title_hint">Título</string>
     <string name="form_description_hint">Descrição</string>
     <string name="form_link_hint">Link</string>
-    <string name="form_priority_label">Prioridade</string>
+    <string name="form_priority_label">Nível de desejo</string>
     <string name="form_save_button">Salvar</string>
     <string name="form_go_back">Voltar</string>
     <string name="form_status_label">Já tenho</string>
+    <string name="empty_wish_list_message">Nenhum item encontrado</string>
 
 </resources>

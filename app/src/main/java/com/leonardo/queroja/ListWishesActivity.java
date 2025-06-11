@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -35,6 +36,7 @@ public class ListWishesActivity extends AppCompatActivity {
     private List<WishEntity> wishes;
     private UserEntity user;
     private TabLayout tabLayout;
+    private TextView emptyListMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class ListWishesActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tab_layout);
         recyclerView = findViewById(R.id.wishlist_recycler);
+        emptyListMessage = findViewById(R.id.empty_list_message);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         tabLayout.addTab(tabLayout.newTab().setText(Status.NOT_OWNED.getDescription()));
@@ -85,6 +88,14 @@ public class ListWishesActivity extends AppCompatActivity {
     private void loadWishesByStatus(Status status) {
         wishes = wishRepository.findByUserIdAndStatus(user.getUserId(), status);
 
+        if (wishes.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyListMessage.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyListMessage.setVisibility(View.GONE);
+        }
+
         if (wishAdapter == null) {
             wishAdapter = new WishAdapter(wishes, new WishAdapter.OnWishClickListener() {
                 @Override
@@ -99,6 +110,10 @@ public class ListWishesActivity extends AppCompatActivity {
                                     wishes.remove(position);
                                     wishAdapter.notifyItemRemoved(position);
                                     Toast.makeText(ListWishesActivity.this, "Desejo removido com sucesso", Toast.LENGTH_SHORT).show();
+                                    if (wishes.isEmpty()) {
+                                        recyclerView.setVisibility(View.GONE);
+                                        emptyListMessage.setVisibility(View.VISIBLE);
+                                    }
                                 }
                             })
                             .setNegativeButton("Cancelar", null)
@@ -116,6 +131,35 @@ public class ListWishesActivity extends AppCompatActivity {
                     Intent intent = new Intent(ListWishesActivity.this, FormWishActivity.class);
                     intent.putExtra("wish_id", wish.getWishId());
                     startActivity(intent);
+                }
+
+                @Override
+                public void onCheckClick(WishEntity wish) {
+                    new AlertDialog.Builder(ListWishesActivity.this)
+                            .setTitle("Confirmar ação")
+                            .setMessage(wish.getStatus() == Status.OWNED ?
+                                    "Deseja marcar este desejo como não realizado?" :
+                                    "Deseja marcar este desejo como realizado?")
+                            .setPositiveButton("Sim", (dialog, which) -> {
+                                int position = wishes.indexOf(wish);
+                                if (position != -1) {
+                                    Status newStatus = wish.getStatus() == Status.OWNED ? Status.NOT_OWNED : Status.OWNED;
+                                    wish.setStatus(newStatus);
+                                    wishRepository.update(wish);
+                                    wishes.remove(position);
+                                    wishAdapter.notifyItemRemoved(position);
+                                    Toast.makeText(ListWishesActivity.this,
+                                            newStatus == Status.OWNED ? "Desejo marcado como realizado" : "Desejo marcado como não realizado",
+                                            Toast.LENGTH_SHORT).show();
+                                    tabLayout.getTabAt(newStatus.getCode()).select();
+                                    if (wishes.isEmpty()) {
+                                        recyclerView.setVisibility(View.GONE);
+                                        emptyListMessage.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Cancelar", null)
+                            .show();
                 }
             });
             recyclerView.setAdapter(wishAdapter);

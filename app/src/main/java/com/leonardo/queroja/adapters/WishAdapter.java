@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.leonardo.queroja.R;
 import com.leonardo.queroja.entities.WishEntity;
+import com.leonardo.queroja.enums.Status;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -18,14 +19,14 @@ import java.util.List;
 public class WishAdapter extends RecyclerView.Adapter<WishAdapter.WishViewHolder> {
 
     private List<WishEntity> wishes;
+    private final OnWishClickListener listener;
 
     public interface OnWishClickListener {
         void onDeleteClick(WishEntity wish);
         void onLinkClick(String url);
         void onItemClick(WishEntity wish);
+        void onCheckClick(WishEntity wish);
     }
-
-    private OnWishClickListener listener;
 
     public WishAdapter(List<WishEntity> wishes, OnWishClickListener listener) {
         this.wishes = wishes;
@@ -72,6 +73,10 @@ public class WishAdapter extends RecyclerView.Adapter<WishAdapter.WishViewHolder
                 break;
         }
 
+        holder.completeImageView.setImageResource(wish.getStatus() == Status.OWNED ? R.drawable.ic_check : R.drawable.ic_undo);
+        holder.completeImageView.setContentDescription(wish.getStatus() == Status.OWNED ?
+                "Marcar como não concluído" : "Marcar como concluído");
+
         holder.linkImageView.setOnClickListener(v -> {
             if (listener != null) listener.onLinkClick(wish.getLink());
         });
@@ -83,6 +88,10 @@ public class WishAdapter extends RecyclerView.Adapter<WishAdapter.WishViewHolder
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onItemClick(wish);
         });
+
+        holder.completeImageView.setOnClickListener(v -> {
+            if (listener != null) listener.onCheckClick(wish);
+        });
     }
 
     @Override
@@ -92,7 +101,7 @@ public class WishAdapter extends RecyclerView.Adapter<WishAdapter.WishViewHolder
 
     public static class WishViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView, descriptionTextView, priorityTextView, createdAtTextView, updatedAtTextView;
-        ImageView linkImageView, deleteImageView;
+        ImageView linkImageView, deleteImageView, completeImageView;
 
         public WishViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -103,7 +112,7 @@ public class WishAdapter extends RecyclerView.Adapter<WishAdapter.WishViewHolder
             updatedAtTextView = itemView.findViewById(R.id.txt_updated_at);
             linkImageView = itemView.findViewById(R.id.img_link);
             deleteImageView = itemView.findViewById(R.id.img_delete);
+            completeImageView = itemView.findViewById(R.id.img_complete);
         }
     }
-
 }
