@@ -58,7 +58,14 @@ public class ListWishesActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText(Status.NOT_OWNED.getDescription()));
         tabLayout.addTab(tabLayout.newTab().setText(Status.OWNED.getDescription()));
 
-        loadWishesByStatus(Status.NOT_OWNED);
+        Status selectedStatusTab = Status.NOT_OWNED;
+        if (getIntent().hasExtra("selected_status")) {
+            int statusCode = getIntent().getIntExtra("selected_status", Status.NOT_OWNED.getCode());
+            selectedStatusTab = Status.fromCode(statusCode);
+        }
+
+        tabLayout.getTabAt(selectedStatusTab.getCode()).select();
+        loadWishesByStatus(selectedStatusTab);
 
         tabLayout.addOnTabSelectedListener(new OnTabSelectedListener() {
             @Override

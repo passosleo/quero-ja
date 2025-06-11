@@ -119,7 +119,10 @@ public class FormWishActivity extends AppCompatActivity {
 
     public void navigateToListWishes(View v) {
         Intent intent = new Intent(this, ListWishesActivity.class);
+        Status selectedStatus = statusSwitch.isChecked() ? Status.OWNED : Status.NOT_OWNED;
+        intent.putExtra("selected_status", selectedStatus.getCode());
         startActivity(intent);
+        finish();
     }
 
     public void saveWish(View v) {
