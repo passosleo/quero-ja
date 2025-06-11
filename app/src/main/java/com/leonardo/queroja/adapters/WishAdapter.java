@@ -32,6 +32,11 @@ public class WishAdapter extends RecyclerView.Adapter<WishAdapter.WishViewHolder
         this.listener = listener;
     }
 
+    public void updateData(List<WishEntity> newWishes) {
+        this.wishes = newWishes;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public WishViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -100,4 +105,5 @@ public class WishAdapter extends RecyclerView.Adapter<WishAdapter.WishViewHolder
             deleteImageView = itemView.findViewById(R.id.img_delete);
         }
     }
+
 }

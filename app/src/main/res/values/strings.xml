@@ -25,5 +25,6 @@
     <string name="form_priority_label">Prioridade</string>
     <string name="form_save_button">Salvar</string>
     <string name="form_go_back">Voltar</string>
+    <string name="form_status_label">Já tenho</string>
 
 </resources>

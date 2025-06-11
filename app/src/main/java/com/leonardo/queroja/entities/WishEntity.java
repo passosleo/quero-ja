@@ -1,6 +1,7 @@
 package com.leonardo.queroja.entities;
 
 import com.leonardo.queroja.enums.Priority;
+import com.leonardo.queroja.enums.Status;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +13,7 @@ public class WishEntity {
     private String description;
     private String link;
     private Priority priority;
+    private Status status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -77,6 +79,14 @@ public class WishEntity {
 
     public void setPriority(Priority priority) {
         this.priority = priority;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public LocalDateTime getCreatedAt() {

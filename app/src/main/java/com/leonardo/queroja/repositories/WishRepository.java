@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.leonardo.queroja.data.DBHelper;
 import com.leonardo.queroja.entities.WishEntity;
 import com.leonardo.queroja.enums.Priority;
+import com.leonardo.queroja.enums.Status;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -43,7 +44,8 @@ public class WishRepository {
             "link",
             "priority",
             "created_at",
-            "updated_at"
+            "updated_at",
+            "status"
     };
 
     public List<WishEntity> findAll() {
@@ -63,6 +65,7 @@ public class WishRepository {
                 wish.setPriority(Priority.fromCode(cursor.getInt(cursor.getColumnIndexOrThrow(tableColumns[5]))));
                 wish.setCreatedAt(LocalDateTime.parse(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[6]))));
                 wish.setUpdatedAt(LocalDateTime.parse(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[7]))));
+                wish.setStatus(Status.fromCode(cursor.getInt(cursor.getColumnIndexOrThrow(tableColumns[8]))));
                 wishes.add(wish);
             } while (cursor.moveToNext());
         }
@@ -89,6 +92,7 @@ public class WishRepository {
             wish.setPriority(Priority.fromCode(cursor.getInt(cursor.getColumnIndexOrThrow(tableColumns[5]))));
             wish.setCreatedAt(LocalDateTime.parse(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[6]))));
             wish.setUpdatedAt(LocalDateTime.parse(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[7]))));
+            wish.setStatus(Status.fromCode(cursor.getInt(cursor.getColumnIndexOrThrow(tableColumns[8]))));
             cursor.close();
             return Optional.of(wish);
         }
@@ -117,6 +121,37 @@ public class WishRepository {
                 wish.setPriority(Priority.fromCode(cursor.getInt(cursor.getColumnIndexOrThrow(tableColumns[5]))));
                 wish.setCreatedAt(LocalDateTime.parse(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[6]))));
                 wish.setUpdatedAt(LocalDateTime.parse(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[7]))));
+                wish.setStatus(Status.fromCode(cursor.getInt(cursor.getColumnIndexOrThrow(tableColumns[8]))));
+                wishes.add(wish);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        return wishes;
+    }
+
+    public List<WishEntity> findByUserIdAndStatus(int userId, Status status) {
+        String selection = String.format("%s = ? AND %s = ?", tableColumns[1], tableColumns[8]);
+        String[] selectionArgs = { String.valueOf(userId), String.valueOf(status.getCode()) };
+
+        Cursor cursor = database.query(tableName,
+                tableColumns, selection, selectionArgs, null, null, null);
+
+        List<WishEntity> wishes = new ArrayList<>();
+
+        if (cursor.moveToFirst()) {
+            do {
+                WishEntity wish = new WishEntity();
+                wish.setWishId(cursor.getInt(cursor.getColumnIndexOrThrow(tableColumns[0])));
+                wish.setUserId(cursor.getInt(cursor.getColumnIndexOrThrow(tableColumns[1])));
+                wish.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[2])));
+                wish.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[3])));
+                wish.setLink(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[4])));
+                wish.setPriority(Priority.fromCode(cursor.getInt(cursor.getColumnIndexOrThrow(tableColumns[5]))));
+                wish.setCreatedAt(LocalDateTime.parse(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[6]))));
+                wish.setUpdatedAt(LocalDateTime.parse(cursor.getString(cursor.getColumnIndexOrThrow(tableColumns[7]))));
+                wish.setStatus(Status.fromCode(cursor.getInt(cursor.getColumnIndexOrThrow(tableColumns[8]))));
                 wishes.add(wish);
             } while (cursor.moveToNext());
         }
@@ -135,6 +170,7 @@ public class WishRepository {
         values.put(tableColumns[5], wish.getPriority().getCode());
         values.put(tableColumns[6], wish.getCreatedAt().toString());
         values.put(tableColumns[7], LocalDateTime.now().toString());
+        values.put(tableColumns[8], wish.getStatus().getCode());
         long id = database.insert(tableName, null, values);
         wish.setWishId((int) id);
         return wish;
@@ -149,6 +185,7 @@ public class WishRepository {
         values.put(tableColumns[5], wish.getPriority().getCode());
         values.put(tableColumns[6], wish.getCreatedAt().toString());
         values.put(tableColumns[7], LocalDateTime.now().toString());
+        values.put(tableColumns[8], wish.getStatus().getCode());
 
         String whereClause = String.format("%s = ?", tableColumns[0]);
         String[] whereArgs = { String.valueOf(wish.getWishId()) };

@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "queroja.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String CREATE_USERS_TABLE = "CREATE TABLE IF NOT EXISTS users (" +
             "user_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -23,6 +23,7 @@ public class DBHelper extends SQLiteOpenHelper {
             "title TEXT NOT NULL, " +
             "description TEXT, " +
             "link TEXT NOT NULL, " +
+            "status INTEGER NOT NULL DEFAULT 0, " +
             "priority INTEGER NOT NULL, " +
             "created_at DATETIME DEFAULT CURRENT_TIMESTAMP, " +
             "updated_at DATETIME, " +
