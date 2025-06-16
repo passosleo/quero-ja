@@ -172,4 +172,22 @@ public class ListWishesActivity extends AppCompatActivity {
         Intent intent = new Intent(this, FormWishActivity.class);
         startActivity(intent);
     }
+
+    public void shareWishlist(View v) {
+        StringBuilder wishlistText = new StringBuilder("Meus Desejos:\n\n");
+        for (WishEntity wish : wishes) {
+            wishlistText.append(wish.getTitle())
+                        .append(" - ")
+                        .append(wish.getPriority().getDescription())
+                        .append("\n");
+        }
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, wishlistText.toString());
+        sendIntent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, null);
+        startActivity(shareIntent);
+    }
 }

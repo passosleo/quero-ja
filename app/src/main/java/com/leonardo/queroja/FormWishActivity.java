@@ -34,7 +34,6 @@ public class FormWishActivity extends AppCompatActivity {
 
     private TextInputLayout titleField, descriptionField, linkField;
     private Spinner prioritySpinner;
-    private SwitchMaterial statusSwitch;
     private WishRepository wishRepository;
     private TextView formTitle;
     private Integer wishId = null;
@@ -57,24 +56,7 @@ public class FormWishActivity extends AppCompatActivity {
         descriptionField = findViewById(R.id.description_layout);
         linkField = findViewById(R.id.link_layout);
         prioritySpinner = findViewById(R.id.priority_spinner);
-        statusSwitch = findViewById(R.id.status_switch);
         formTitle = findViewById(R.id.form_title);
-
-
-        int[][] states = new int[][] {
-                new int[] { android.R.attr.state_checked },
-                new int[] { -android.R.attr.state_checked }
-        };
-        int[] thumbColors = new int[] {
-                getResources().getColor(R.color.primary, getTheme()),
-                getResources().getColor(R.color.darker_gray, getTheme())
-        };
-        int[] trackColors = new int[] {
-                getResources().getColor(R.color.gray, getTheme()),
-                getResources().getColor(R.color.gray, getTheme())
-        };
-        statusSwitch.setThumbTintList(new ColorStateList(states, thumbColors));
-        statusSwitch.setTrackTintList(new ColorStateList(states, trackColors));
 
         ArrayAdapter<Priority> adapter = new ArrayAdapter<>(
                 this,
@@ -97,7 +79,6 @@ public class FormWishActivity extends AppCompatActivity {
             }
         } else {
             formTitle.setText("Novo Desejo");
-            statusSwitch.setChecked(false); // Default to NOT_OWNED for new wishes
         }
     }
 
@@ -114,13 +95,10 @@ public class FormWishActivity extends AppCompatActivity {
             }
         }
 
-        statusSwitch.setChecked(wish.getStatus() == Status.OWNED);
     }
 
     public void navigateToListWishes(View v) {
         Intent intent = new Intent(this, ListWishesActivity.class);
-        Status selectedStatus = statusSwitch.isChecked() ? Status.OWNED : Status.NOT_OWNED;
-        intent.putExtra("selected_status", selectedStatus.getCode());
         startActivity(intent);
         finish();
     }
@@ -166,14 +144,12 @@ public class FormWishActivity extends AppCompatActivity {
 
         UserEntity loggedUser = UserSession.getInstance(this).getUser();
         Priority selectedPriority = (Priority) prioritySpinner.getSelectedItem();
-        Status selectedStatus = statusSwitch.isChecked() ? Status.OWNED : Status.NOT_OWNED;
 
         if (wishToEdit != null) {
             wishToEdit.setTitle(title);
             wishToEdit.setDescription(description);
             wishToEdit.setLink(link);
             wishToEdit.setPriority(selectedPriority);
-            wishToEdit.setStatus(selectedStatus);
 
             wishRepository.update(wishToEdit);
             Toast.makeText(this, "Desejo atualizado com sucesso", Toast.LENGTH_SHORT).show();
@@ -184,7 +160,7 @@ public class FormWishActivity extends AppCompatActivity {
             newWish.setDescription(description);
             newWish.setLink(link);
             newWish.setPriority(selectedPriority);
-            newWish.setStatus(selectedStatus);
+            newWish.setStatus(Status.NOT_OWNED);
 
             wishRepository.create(newWish);
             Toast.makeText(this, "Desejo cadastrado com sucesso", Toast.LENGTH_SHORT).show();

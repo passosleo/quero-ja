@@ -27,5 +27,6 @@
     <string name="form_go_back">Voltar</string>
     <string name="form_status_label">Já tenho</string>
     <string name="empty_wish_list_message">Nenhum item encontrado</string>
+    <string name="share_wishlist">"Compartilhar Lista de Desejos</string>
 
 </resources>
